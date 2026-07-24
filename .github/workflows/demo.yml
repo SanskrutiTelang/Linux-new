@@ -3,51 +3,54 @@ name: manual jobs
 on:
   workflow_dispatch:
     inputs:
-        environment:
-            description: demo
-            required: true
-            type: string
-            default: "dev"
+      environment:
+        description: demo
+        required: true
+        type: string
+        default: "dev"
 
-   value:
-    descirption: demo
-    required: true
-    type: number
-    default: 1000
+      value:
+        description: demo
+        required: true
+        type: number
+        default: 1000
 
-   allow-run:
-    description: allow to run steps
-    required: true
-    type: boolean
-    default: true
-    
-   data_env:
-    description: allow to run steps
-    required: true
-    type: choice
-    options:
-        -dev
-        -stg
-        -prod
-        -init
-        
+      allow-run:
+        description: allow to run steps
+        required: true
+        type: boolean
+        default: true
+
+      data_env:
+        description: allow to run steps
+        required: true
+        type: choice
+        options:
+          - dev
+          - stg
+          - prod
+          - init
+
 jobs:
-    demo_input:
-        runs-on: ubuntu-latest
-        steps:
-            - name: checkout repo branch
-              uses: actions/checkout@v7
+  demo_input:
+    runs-on: ubuntu-latest
 
-            - name: print values inputs
-              run: |
-               echo "env:${{github.event.inputs.environment}}"
+    steps:
+      - name: Checkout repo branch
+        uses: actions/checkout@v4
 
-            - name: allow-run true
-              if: github.events.inputs.allow-run
-              run:
-                echo "build started"
+      - name: Print values inputs
+        run: |
+          echo "env: ${{ github.event.inputs.environment }}"
+          echo "value: ${{ github.event.inputs.value }}"
+          echo "data_env: ${{ github.event.inputs.data_env }}"
 
-            - name: demo choice inputs
-              run: |
-                echo "${{github.events.inputs.data_env}}"
-                echo "${{github.events.inputs.value}}"
+      - name: Allow-run true
+        if: ${{ github.event.inputs.allow-run == 'true' }}
+        run: |
+          echo "Build started"
+
+      - name: Demo choice inputs
+        run: |
+          echo "${{ github.event.inputs.data_env }}"
+          echo "${{ github.event.inputs.value }}"
